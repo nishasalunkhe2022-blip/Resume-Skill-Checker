@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Resume Skill Checker</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:linear-gradient(135deg,#4facfe,#00f2fe);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+}
+
+.container{
+    width:90%;
+    max-width:700px;
+    background:white;
+    padding:30px;
+    border-radius:15px;
+    box-shadow:0 10px 25px rgba(0,0,0,.2);
+}
+
+h1{
+    text-align:center;
+    color:#0077cc;
+    margin-bottom:10px;
+}
+
+p{
+    text-align:center;
+    margin-bottom:20px;
+    color:#555;
+}
+
+label{
+    display:block;
+    margin-top:15px;
+    font-weight:bold;
+}
+
+input,
+select,
+textarea{
+    width:100%;
+    padding:12px;
+    margin-top:8px;
+    border:1px solid #ccc;
+    border-radius:8px;
+    font-size:16px;
+}
+
+textarea{
+    resize:none;
+}
+
+button{
+    width:100%;
+    margin-top:20px;
+    padding:14px;
+    background:#0077cc;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:18px;
+    cursor:pointer;
+    transition:.3s;
+}
+
+button:hover{
+    background:#005fa3;
+}
+
+.result{
+    margin-top:25px;
+    background:#f4f4f4;
+    padding:20px;
+    border-radius:10px;
+}
+
+.result h2{
+    color:green;
+    margin-bottom:15px;
+}
+
+ul{
+    margin-left:20px;
+    margin-top:10px;
+}
+
+.good{
+    color:green;
+    font-weight:bold;
+}
+
+.average{
+    color:orange;
+    font-weight:bold;
+}
+
+.bad{
+    color:red;
+    font-weight:bold;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>📄 Resume Skill Checker</h1>
+
+<p>AI Mini Project</p>
+
+<form id="resumeForm">
+
+<label>Student Name</label>
+
+<input
+type="text"
+id="name"
+placeholder="Enter your name"
+required>
+
+<label>Select Job Role</label>
+
+<select id="role">
+
+<option value="">Select</option>
+
+<option>Python Developer</option>
+
+<option>Java Developer</option>
+
+<option>Web Developer</option>
+
+<option>Data Analyst</option>
+
+</select>
+
+<label>Paste Resume Skills</label>
+
+<textarea
+id="resume"
+rows="8"
+placeholder="Example :
+Python HTML CSS JavaScript SQL Flask">
+</textarea>
+
+<button type="submit">
+
+Check Resume
+
+</button>
+
+</form>
+
+<div
+id="output"
+class="result"
+style="display:none;">
+
+</div>
+
+</div>
+
+<script>
+
+document.getElementById("resumeForm").addEventListener("submit", function(e){
+
+    e.preventDefault();
+
+    let name = document.getElementById("name").value;
+    let role = document.getElementById("role").value;
+    let resume = document.getElementById("resume").value.toLowerCase();
+
+    let jobs = {
+
+        "Python Developer":[
+            "python","flask","django","html","css","javascript","sql"
+        ],
+
+        "Java Developer":[
+            "java","jdbc","jsp","servlet","mysql","html"
+        ],
+
+        "Web Developer":[
+            "html","css","javascript","bootstrap","php","mysql"
+        ],
+
+        "Data Analyst":[
+            "python","excel","sql","tableau","power bi"
+        ]
+
+    };
+
+    let skills = jobs[role];
+
+    if(!skills){
+
+        alert("Please Select Job Role");
+
+        return;
+
+    }
+
+    let found = [];
+
+    let missing = [];
+
+    skills.forEach(function(skill){
+
+        if(resume.includes(skill)){
+
+            found.push(skill);
+
+        }
+
+        else{
+
+            missing.push(skill);
+
+        }
+
+    });
+
+    let percent = Math.round((found.length/skills.length)*100);
+
+    let status = "";
+
+    let color = "";
+
+    if(percent>=80){
+
+        status="Excellent Match";
+
+        color="good";
+
+    }
+
+    else if(percent>=60){
+
+        status="Good Match";
+
+        color="good";
+
+    }
+
+    else if(percent>=40){
+
+        status="Average Match";
+
+        color="average";
+
+    }
+
+    else{
+
+        status="Need More Skills";
+
+        color="bad";
+
+    }
+
+    document.getElementById("output").style.display="block";
+
+    document.getElementById("output").innerHTML=`
+
+        <h2>Resume Analysis</h2>
+
+        <p><b>Name :</b> ${name}</p>
+
+        <p><b>Job Role :</b> ${role}</p>
+
+        <p><b>Skill Match :</b> ${percent}%</p>
+
+        <p class="${color}">${status}</p>
+
+        <hr>
+
+        <h3>Matched Skills</h3>
+
+        <ul>
+
+            ${found.map(skill=>`<li>${skill}</li>`).join("")}
+
+        </ul>
+
+        <h3>Missing Skills</h3>
+
+        <ul>
+
+            ${missing.map(skill=>`<li>${skill}</li>`).join("")}
+
+        </ul>
+
+    `;
+
+});
+
+</script>
+
+</body>
+</html>
